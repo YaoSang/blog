@@ -19,21 +19,21 @@ from django.urls import path
 from app01.views.login import LoginView
 from app01.views.register import RegView
 from app01.views.class_list import ClassList
-from app01.views.FoodInfoData import FoodInfoData
+from app01.views.article_detail import ArticleDetail
+from app01.views.today_recommend import TodayRecommend
+from app01.views.new_publish import NewPublish
 from app01.views.recommend import Recommend
-from app01.views.searchShowList import SearchShowList
-from app01.views.index_show_list import IndexShowList
+from app01.views.comment import CommendView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('login/', LoginView.as_view()),
     path('register/', RegView.as_view()),
-    path('recommend/', Recommend.as_view()),
+    path('today_recommend/', TodayRecommend.as_view()),
+    path('new_publish/', NewPublish.as_view()),
     path('class_list/', ClassList.as_view()),
-    path('index_show_list/', IndexShowList.as_view()),
-    path('search_show_list/', SearchShowList.as_view()),
-    path('food_info_data/', FoodInfoData.as_view()),
-
-
+    path('article_detail/', ArticleDetail.as_view()),
+    path('recommend/', Recommend.as_view()),
+    path('comment/', CommendView.as_view()),
 ]
 

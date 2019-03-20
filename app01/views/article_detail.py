@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from app01.utils.response import BaseResponse
 
 
-class FoodInfoData(APIView):
+class ArticleDetail(APIView):
     res = BaseResponse()
 
     def get(self, request):

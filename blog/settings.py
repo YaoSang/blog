@@ -24,7 +24,7 @@ SECRET_KEY = '3t1@(+j*9%4z111e%1l*@dfg-dk!5$cl-n*%9jhzl*^u4t35p^'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'app01.apps.App01Config',
+    'comments.apps.CommentsConfig',
     'corsheaders'
 ]
 

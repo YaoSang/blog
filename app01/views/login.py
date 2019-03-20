@@ -26,6 +26,7 @@ class LoginView(APIView):
             if not user:
                 self.res.code = 201
                 self.res.msg = "用户不存在"
+
             else:
                 user_obj = auth.authenticate(username=username, password=password)
                 if user_obj:
