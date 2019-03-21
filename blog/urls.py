@@ -24,6 +24,7 @@ from app01.views.today_recommend import TodayRecommend
 from app01.views.new_publish import NewPublish
 from app01.views.recommend import Recommend
 from app01.views.comment import CommendView
+from app01.views.hot_tags import HotTags
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -35,5 +36,6 @@ urlpatterns = [
     path('article_detail/', ArticleDetail.as_view()),
     path('recommend/', Recommend.as_view()),
     path('comment/', CommendView.as_view()),
+    path('hot_tags/', HotTags.as_view()),
 ]
 
