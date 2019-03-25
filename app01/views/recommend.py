@@ -20,13 +20,13 @@ class Recommend(APIView):
 
     def get(self, request):
         recommend = []
-        recommend_article = Article.objects.order_by('-total_views')[0:7]
+        recommend_article = Article.objects.order_by('-total_views')[0:5]
         for article in recommend_article:
             every_recommend = {
                 "id": "",
                 "title": "",
-                "user":"",
-                "create_time":"",
+                "user": "",
+                "create_time": "",
                 "total_views": "",
                 "excerpt": "",
             }

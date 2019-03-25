@@ -28,13 +28,15 @@ class CommendView(APIView):
                 "text": "",
                 "created_time": "",
                 "article": "",
-                "excerpt": ""
+                "excerpt": "",
+                "article_id":""
             }
             excerpt = strip_tags(self.md.convert(comment.text))[:40]
             every_commend["id"] = comment.id
             every_commend["text"] = comment.text
             # every_commend["created_time"] = comment.created_time
             every_commend["article"] = comment.article.title
+            every_commend["article_id"] = comment.article.id
             every_commend["excerpt"] = excerpt
             all_comment.append(every_commend)
         self.res.data = all_comment

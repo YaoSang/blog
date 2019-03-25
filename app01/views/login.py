@@ -32,6 +32,7 @@ class LoginView(APIView):
                 if user_obj:
                     self.res.code = 200
                     self.res.data["username"] = username
+                    request.session["username"] = username
                 else:
                     self.res.code = 202
                     self.res.msg = "用户名或密码错误"

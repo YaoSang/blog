@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, re_path
 
 from app01.views.login import LoginView
 from app01.views.register import RegView
@@ -23,8 +23,12 @@ from app01.views.article_detail import ArticleDetail
 from app01.views.today_recommend import TodayRecommend
 from app01.views.new_publish import NewPublish
 from app01.views.recommend import Recommend
+from app01.views.my_article import MyArticle
 from app01.views.comment import CommendView
 from app01.views.hot_tags import HotTags
+from app01.views.article_update import ArticleUpdate
+from app01.views.article_add import ArticleAdd
+from app01.views.article_delete import ArticleDelete
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -33,9 +37,12 @@ urlpatterns = [
     path('today_recommend/', TodayRecommend.as_view()),
     path('new_publish/', NewPublish.as_view()),
     path('class_list/', ClassList.as_view()),
-    path('article_detail/', ArticleDetail.as_view()),
     path('recommend/', Recommend.as_view()),
+    path('my_article/', MyArticle.as_view()),
     path('comment/', CommendView.as_view()),
     path('hot_tags/', HotTags.as_view()),
+    path('article_update/', ArticleUpdate.as_view()),
+    path('article_add/', ArticleAdd.as_view()),
+    re_path(r'article_detail/id=(\d+)', ArticleDetail.as_view()),
+    re_path(r'article_delete/id=(\d+)', ArticleDelete.as_view()),
 ]
-
