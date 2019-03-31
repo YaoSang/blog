@@ -16,12 +16,6 @@ class UserInfo(AbstractUser, models.Model):
         return self.username
 
 
-# 分类表
-class Category(models.Model):
-    cate_name = models.CharField(max_length=32)
-
-    def __str__(self):
-        return self.cate_name
 
 
 class Tag(models.Model):
@@ -38,7 +32,6 @@ class Article(models.Model):
     create_time = models.DateTimeField(auto_now_add=True)
     modify_time = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(UserInfo, on_delete=models.CASCADE)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="article")
     tags = models.ManyToManyField(Tag, blank=True)
     total_views = models.IntegerField(default=0)
 
