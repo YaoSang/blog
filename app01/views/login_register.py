@@ -80,15 +80,14 @@ class ChangeUser(APIView):
     res = BaseResponse()
 
     def post(self, request):
+        print(request.data)
         user_id = request.data.get("id")
-        old_password = request.data.get("data").get("old_password")
-        change_password = request.data.get("data").get("change_password")
-        user = UserInfo.objects.filter(id=user_id).first()
-
-        if user.check_password(old_password):
-            user.set_password(change_password)
-            user.save()
+        change_username = request.data.get("change_username")
+        user = UserInfo.objects.filter(id=user_id).update(username=change_username)
+        if user:
+            pass
         else:
             self.res.code = 201
-            self.res.msg = "输入的原密码不正确"
+            self.res.msg = "用户名修改失败"
+
         return Response(self.res.dict)

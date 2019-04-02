@@ -1,6 +1,7 @@
 # Date: 2019-03-20 上午 10:39
 
 import markdown
+import time
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -43,6 +44,7 @@ class ArticleDetail(APIView):
         data["title"] = article.title
         data["content"] = md.convert(article.content)
         data["create_time"] = article.create_time
+        print(type(article.create_time))
         data["modify_time"] = article.modify_time
         data["user"] = article.user.username
         data['tag'] = tag
@@ -61,18 +63,21 @@ class MyArticle(APIView):
     )
 
     def post(self, request):
-
+        username = request.data["username"]
         user_id = request.data["user_id"]
+        if username == 'root':
+            my_articles = Article.objects.all().order_by('-create_time')
+        else:
+            my_articles = Article.objects.filter(user_id=user_id).order_by('-create_time')
         my_article_list = []
-        my_articles = Article.objects.filter(user_id=user_id).order_by('-create_time')
         for article in my_articles:
-            every_article = {
+            every_article = dict({
                 "id": "",
                 "title": "",
                 "create_time": "",
                 "user": "",
                 "views": ""
-            }
+            })
             every_article["id"] = article.pk
             every_article["title"] = article.title
             every_article["user"] = article.user.username
@@ -93,14 +98,15 @@ class ArticleAdd(APIView):
     )
 
     def post(self, request):
-        title = request.data['title']
-        tag = request.data['tag']
-        context = request.data['context']
+        user_id = request.data.get("user_id")
+        title = request.data.get('title')
+        tag = request.data.get('tag')
+        context = request.data.get('context')
         try:
             article = Article.objects.create(
                 title=title,
                 content=context,
-                user_id=1,
+                user_id=user_id,
             )
             tags = Tag.objects.all()
             for t in tags:
@@ -136,7 +142,7 @@ class ArticleUpdate(APIView):
     )
 
     def post(self, request):
-        list = []
+        list1 = []
         tags = request.data["tag"]
         tag_list = tags.strip("").split(",")  # 前端传过来的标签列表
         for tag in tag_list:
@@ -147,15 +153,15 @@ class ArticleUpdate(APIView):
                 continue
         for j in tag_list:
             tag = Tag.objects.filter(name=j).first()
-            list.append(tag)
+            list1.append(tag)
 
-        id = request.data['id']
+        article_id = request.data['id']
         title = request.data['title']
-        markdown = request.data['markdown']
+        markdown_content = request.data['markdown']
 
-        article = Article.objects.filter(id=id).first()
+        article = Article.objects.filter(id=article_id).first()
         article.title = title
-        article.content = markdown
+        article.content = markdown_content
         article.tags.set(list)
         article.save()
         return Response(self.res.dict)
@@ -191,4 +197,38 @@ class ArticleSearch(APIView):
         except Exception as e:
             self.res.code = 201
             self.res.data = str(e)
+        return Response(self.res.dict)
+
+
+class TimeFilterArticle(APIView):
+    res = BaseResponse()
+
+    def time_stamp(self, article_time):
+        article_time = time.mktime(article_time.timetuple())
+        article_time = int(article_time)
+        return article_time
+
+    def post(self, request):
+        username = request.data.get("username")
+        user_id = request.data.get("user_id")
+        if username == 'root':
+            my_articles = Article.objects.all().order_by('-create_time')
+        else:
+            my_articles = Article.objects.filter(user_id=user_id).order_by('-create_time')
+        click_time = int(request.data.get('time') / 1000)
+        article_list = []
+        timestamp = 86400
+        for article in my_articles:
+            format_time = article.create_time.strftime("%Y-%m-%d %H:%M:%S")
+            article.create_time = self.time_stamp(article.create_time)
+            if click_time  <= article.create_time <= click_time + timestamp:
+                every_article = dict({"id": "", "title": "", "create_time": "", "user": "", "views": ""})
+                every_article['id'] = article.id
+                every_article['title'] = article.title
+                every_article['create_time'] = format_time
+                every_article['user'] = article.user.username
+                every_article['views'] = article.total_views
+                article_list.append(every_article)
+        self.res.data = article_list
+
         return Response(self.res.dict)
