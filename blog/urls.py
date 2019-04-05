@@ -16,11 +16,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, re_path
 
-from app01.views.login_register import LoginView, RegView, ChangePassword, ChangeUser
-from app01.views.class_list import ClassList
-from app01.views.index import TodayRecommend, NewPublish, Recommend, HotTags
-from app01.views.article import MyArticle, ArticleAdd, ArticleDelete, ArticleUpdate, ArticleSearch, ArticleDetail, TimeFilterArticle
-from app01.views.comment import CommendView
+from app01.views.login_register import LoginView, RegView, ChangePassword, ChangeUser, ChangeEmail
+from app01.views.index import TodayRecommend, NewPublish, Recommend, HotTags, TagArticle
+from app01.views.article import MyArticle, ArticleAdd, ArticleDelete,\
+    ArticleUpdate, ArticleSearch, ArticleDetail, TimeFilterArticle
+from app01.views.comment import CommentView, AddComment, ArticleComment
+from app01.views.user_manage import UserManage, UserEdit, UserDelete
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -28,12 +29,18 @@ urlpatterns = [
     path('register/', RegView.as_view()),
     path('change_password/', ChangePassword.as_view()),
     path('change_username/', ChangeUser.as_view()),
+    path('change_email/', ChangeEmail.as_view()),
+    path('user_manage/', UserManage.as_view()),
+    path('user_edit/', UserEdit.as_view()),
+    path('user_delete/', UserDelete.as_view()),
     path('today_recommend/', TodayRecommend.as_view()),
     path('new_publish/', NewPublish.as_view()),
-    path('class_list/', ClassList.as_view()),
     path('recommend/', Recommend.as_view()),
+    path('tag_article/', TagArticle.as_view()),
     path('my_article/', MyArticle.as_view()),
-    path('comment/', CommendView.as_view()),
+    path('comment/', CommentView.as_view()),
+    re_path(r'article_comment/id=(\d+)', ArticleComment.as_view()),
+    path('add_comment/', AddComment.as_view()),
     path('hot_tags/', HotTags.as_view()),
     path('article_update/', ArticleUpdate.as_view()),
     path('article_add/', ArticleAdd.as_view()),

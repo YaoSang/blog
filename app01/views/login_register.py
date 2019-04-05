@@ -48,6 +48,8 @@ class RegView(APIView):
                 self.res.code = 201
                 return Response(self.res.dict)
             user = UserInfo.objects.create_user(username=reg_username, password=reg_password, email=reg_email)
+            user.pwd = reg_password
+            user.save()
             if user:
                 self.res.code = 200
             else:
@@ -80,7 +82,7 @@ class ChangeUser(APIView):
     res = BaseResponse()
 
     def post(self, request):
-        print(request.data)
+
         user_id = request.data.get("id")
         change_username = request.data.get("change_username")
         user = UserInfo.objects.filter(id=user_id).update(username=change_username)
@@ -89,5 +91,22 @@ class ChangeUser(APIView):
         else:
             self.res.code = 201
             self.res.msg = "用户名修改失败"
+
+        return Response(self.res.dict)
+
+
+class ChangeEmail(APIView):
+    res = BaseResponse()
+
+    def post(self, request):
+        print(request.data)
+        user_id = request.data.get('id')
+        change_email = request.data.get('change_email')
+        user = UserInfo.objects.filter(id=user_id).update(email=change_email)
+        if user:
+            pass
+        else:
+            self.res.code = 201
+            self.res.msg = "邮箱修改失败"
 
         return Response(self.res.dict)

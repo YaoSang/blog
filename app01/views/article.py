@@ -44,7 +44,6 @@ class ArticleDetail(APIView):
         data["title"] = article.title
         data["content"] = md.convert(article.content)
         data["create_time"] = article.create_time
-        print(type(article.create_time))
         data["modify_time"] = article.modify_time
         data["user"] = article.user.username
         data['tag'] = tag

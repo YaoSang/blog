@@ -44,7 +44,7 @@ class NewPublish(APIView):
 
     def get(self, request):
         new_publish_article_list = []
-        new_publish_article = Article.objects.order_by("-create_time")[:7]
+        new_publish_article = Article.objects.order_by("create_time")[:4]
         for article in new_publish_article:
             every_article = {"id": "", "title": "", "create_time": "", "excerpt": "", "user": ""}
             excerpt = strip_tags(self.md.convert(article.content))[:90]
@@ -106,4 +106,30 @@ class Recommend(APIView):
             every_recommend["excerpt"] = excerpt
             recommend.append(every_recommend)
         self.res.data = recommend
+        return Response(self.res.dict)
+
+
+class TagArticle(APIView):
+
+    res = BaseResponse()
+
+    def post(self, request):
+        articles = []
+        tag_id = request.data.get('id')
+        article_list = Article.objects.filter(tags__id=tag_id)
+        for article in article_list:
+            every_article = dict({
+                "id": "",
+                "title": "",
+                "create_time": "",
+                "user": "",
+                "views": ""
+            })
+            every_article["id"] = article.pk
+            every_article["title"] = article.title
+            every_article["user"] = article.user.username
+            every_article["views"] = article.total_views
+            every_article["create_time"] = article.create_time.strftime("%Y-%m-%d %H:%M:%S")
+            articles.append(every_article)
+        self.res.data = articles
         return Response(self.res.dict)

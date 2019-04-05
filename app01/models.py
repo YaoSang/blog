@@ -9,13 +9,12 @@ from django.contrib.auth.models import AbstractUser
 class UserInfo(AbstractUser, models.Model):
     username = models.CharField(max_length=11, unique=True)
     password = models.CharField(max_length=128)
+    pwd = models.CharField(max_length=128, null=True, blank=True)
     email = models.CharField(max_length=128, null=True, blank=True)
     create_time = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.username
-
-
 
 
 class Tag(models.Model):
