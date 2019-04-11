@@ -23,6 +23,8 @@ from app01.views.article import MyArticle, ArticleAdd, ArticleDelete,\
 from app01.views.comment import CommentView, AddComment, ArticleComment
 from app01.views.user_manage import UserManage, UserEdit, UserDelete
 
+from app01.views.index1 import index1
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('login/', LoginView.as_view()),
@@ -49,4 +51,6 @@ urlpatterns = [
     re_path(r'article_detail/id=(\d+)', ArticleDetail.as_view()),
     re_path(r'article_delete/id=(\d+)', ArticleDelete.as_view()),
 
+    path('index/', index1),
+    re_path('^$', index1)
 ]
