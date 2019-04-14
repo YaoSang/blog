@@ -21,7 +21,7 @@ class TodayRecommend(APIView):
 
     def get(self, request):
         recommend = []
-        today_recommend = Article.objects.all()[0:4]
+        today_recommend = Article.objects.all().order_by('-total_views')[0:4]
         for article in today_recommend:
             every_recommend = {"id": "", "title": "", "excerpt": ""}
             excerpt = strip_tags(self.md.convert(article.content))[:30]

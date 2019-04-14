@@ -32,7 +32,7 @@ class ArticleDetail(APIView):
             "create_time": "",
             "modify_time": "",
             "user": "",
-            "tags": "",
+            "tag": "",
             "total_views": ""
         }
         tag_query = article.tags.all().values("name")
@@ -64,10 +64,11 @@ class MyArticle(APIView):
     def post(self, request):
         username = request.data["username"]
         user_id = request.data["user_id"]
-        if username == 'root':
-            my_articles = Article.objects.all().order_by('-create_time')
-        else:
-            my_articles = Article.objects.filter(user_id=user_id).order_by('-create_time')
+        # if username == 'root':
+        #     my_articles = Article.objects.all().order_by('-create_time')
+        # else:
+        #     my_articles = Article.objects.filter(user_id=user_id).order_by('-total_views')
+        my_articles = Article.objects.all().order_by('-total_views')
         my_article_list = []
         for article in my_articles:
             every_article = dict({
@@ -101,21 +102,28 @@ class ArticleAdd(APIView):
         title = request.data.get('title')
         tag = request.data.get('tag')
         context = request.data.get('context')
+        if ',' in tag:
+            tag_list = [tag for tag in tag.split(',') if tag != '']
+
+        else:
+            tag_list = list(tag)
         try:
-            article = Article.objects.create(
+            # 先添加文章
+            article_obj = Article.objects.create(
                 title=title,
                 content=context,
                 user_id=user_id,
             )
-            tags = Tag.objects.all()
-            for t in tags:
-                if t.name == tag:
-                    break
-                else:
-                    Tag.objects.create(name=tag)
-                    break
-            add_tag = Tag.objects.filter(name=tag)
-            article.tags.add(add_tag)
+            query_list = []
+            for i in tag_list:
+                query_list.append(Tag(name=i))
+            Tag.objects.bulk_create(query_list)  # 批量添加标签对象
+            # 多对多添加标签???????????????????
+            li = []
+            for q in tag_list:
+                q_obj = Tag.objects.filter(name=q).first()
+                li.append(q_obj.id)
+            article_obj.tags.add(*li) # 通过id添加每个标签
             return Response(self.res.dict)
 
         except Exception as e:
@@ -161,7 +169,7 @@ class ArticleUpdate(APIView):
         article = Article.objects.filter(id=article_id).first()
         article.title = title
         article.content = markdown_content
-        article.tags.set(list)
+        article.tags.set(list1)
         article.save()
         return Response(self.res.dict)
 
@@ -220,7 +228,7 @@ class TimeFilterArticle(APIView):
         for article in my_articles:
             format_time = article.create_time.strftime("%Y-%m-%d %H:%M:%S")
             article.create_time = self.time_stamp(article.create_time)
-            if click_time  <= article.create_time <= click_time + timestamp:
+            if click_time <= article.create_time <= click_time + timestamp:
                 every_article = dict({"id": "", "title": "", "create_time": "", "user": "", "views": ""})
                 every_article['id'] = article.id
                 every_article['title'] = article.title

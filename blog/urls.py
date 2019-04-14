@@ -51,6 +51,6 @@ urlpatterns = [
     re_path(r'article_detail/id=(\d+)', ArticleDetail.as_view()),
     re_path(r'article_delete/id=(\d+)', ArticleDelete.as_view()),
 
-    path('index/', index1),
-    re_path('^$', index1)
+    # path('index/', index1),
+    # re_path('^$', index1)
 ]
