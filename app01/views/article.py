@@ -64,10 +64,41 @@ class MyArticle(APIView):
     def post(self, request):
         username = request.data["username"]
         user_id = request.data["user_id"]
-        # if username == 'root':
-        #     my_articles = Article.objects.all().order_by('-create_time')
-        # else:
-        #     my_articles = Article.objects.filter(user_id=user_id).order_by('-total_views')
+        if username == 'root':
+            my_articles = Article.objects.all().order_by('-create_time')
+        else:
+            my_articles = Article.objects.filter(user_id=user_id).order_by('-total_views')
+        # my_articles = Article.objects.all().order_by('-total_views')
+        my_article_list = []
+        for article in my_articles:
+            every_article = dict({
+                "id": "",
+                "title": "",
+                "create_time": "",
+                "user": "",
+                "views": ""
+            })
+            every_article["id"] = article.pk
+            every_article["title"] = article.title
+            every_article["user"] = article.user.username
+            every_article["views"] = article.total_views
+            every_article["create_time"] = article.create_time.strftime("%Y-%m-%d %H:%M:%S")
+            my_article_list.append(every_article)
+        self.res.data = my_article_list
+        return Response(self.res.dict)
+
+
+class HotArticle(APIView):
+    res = BaseResponse()
+    md = markdown.Markdown(
+        extensions=[
+            'markdown.extensions.extra',
+            'markdown.extensions.codehilite',
+        ]
+    )
+
+    def get(self, request):
+
         my_articles = Article.objects.all().order_by('-total_views')
         my_article_list = []
         for article in my_articles:
@@ -86,6 +117,7 @@ class MyArticle(APIView):
             my_article_list.append(every_article)
         self.res.data = my_article_list
         return Response(self.res.dict)
+
 
 
 class ArticleAdd(APIView):

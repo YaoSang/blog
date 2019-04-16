@@ -44,7 +44,7 @@ class NewPublish(APIView):
 
     def get(self, request):
         new_publish_article_list = []
-        new_publish_article = Article.objects.order_by("create_time")[:4]
+        new_publish_article = Article.objects.order_by("-create_time")[:4]
         for article in new_publish_article:
             every_article = {"id": "", "title": "", "create_time": "", "excerpt": "", "user": ""}
             excerpt = strip_tags(self.md.convert(article.content))[:90]
