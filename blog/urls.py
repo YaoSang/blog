@@ -19,7 +19,7 @@ from django.urls import path, re_path
 from app01.views.login_register import LoginView, RegView, ChangePassword, ChangeUser, ChangeEmail
 from app01.views.index import TodayRecommend, NewPublish, Recommend, HotTags, TagArticle
 from app01.views.article import MyArticle, ArticleAdd, ArticleDelete,\
-    ArticleUpdate, ArticleSearch, ArticleDetail, TimeFilterArticle, HotArticle
+    ArticleUpdate, ArticleSearch, ArticleDetail, TimeFilterArticle, HotArticle, TimeFilter
 from app01.views.comment import CommentView, AddComment, ArticleComment
 from app01.views.user_manage import UserManage, UserEdit, UserDelete
 
@@ -49,6 +49,7 @@ urlpatterns = [
     path('article_add/', ArticleAdd.as_view()),
     path('search/', ArticleSearch.as_view()),
     path('time_filter_article/', TimeFilterArticle.as_view()),
+    path('time_filter/', TimeFilter.as_view()),
     re_path(r'article_detail/id=(\d+)', ArticleDetail.as_view()),
     re_path(r'article_delete/id=(\d+)', ArticleDelete.as_view()),
 

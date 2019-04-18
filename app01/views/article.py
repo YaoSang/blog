@@ -1,7 +1,8 @@
 # Date: 2019-03-20 上午 10:39
+import time
 
 import markdown
-import time
+
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -271,3 +272,34 @@ class TimeFilterArticle(APIView):
         self.res.data = article_list
 
         return Response(self.res.dict)
+
+
+class TimeFilter(APIView):
+    res = BaseResponse()
+
+    def time_stamp(self, article_time):
+        article_time = time.mktime(article_time.timetuple())
+        article_time = int(article_time)
+        return article_time
+
+    def post(self, request):
+
+        my_articles = Article.objects.all().order_by('-create_time')
+        click_time = int(request.data.get('time') / 1000)
+        article_list = []
+        timestamp = 86400
+        for article in my_articles:
+            format_time = article.create_time.strftime("%Y-%m-%d %H:%M:%S")
+            article.create_time = self.time_stamp(article.create_time)
+            if click_time <= article.create_time <= click_time + timestamp:
+                every_article = dict({"id": "", "title": "", "create_time": "", "user": "", "views": ""})
+                every_article['id'] = article.id
+                every_article['title'] = article.title
+                every_article['create_time'] = format_time
+                every_article['user'] = article.user.username
+                every_article['views'] = article.total_views
+                article_list.append(every_article)
+        self.res.data = article_list
+
+        return Response(self.res.dict)
+
