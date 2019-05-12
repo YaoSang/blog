@@ -17,6 +17,7 @@ class UserInfo(AbstractUser, models.Model):
         return self.username
 
 
+# 标签表
 class Tag(models.Model):
     name = models.CharField(max_length=100)
 
@@ -36,3 +37,6 @@ class Article(models.Model):
 
     def __str__(self):
         return self.title
+
+
+

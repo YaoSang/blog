@@ -120,7 +120,6 @@ class HotArticle(APIView):
         return Response(self.res.dict)
 
 
-
 class ArticleAdd(APIView):
     res = BaseResponse()
     md = markdown.Markdown(
@@ -302,4 +301,3 @@ class TimeFilter(APIView):
         self.res.data = article_list
 
         return Response(self.res.dict)
-
